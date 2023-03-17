@@ -6,14 +6,14 @@ describe('Transações', () => {
   it('Cadastrar uma transação de entrada', () => {
     criarTransação(2500, "2023-02-20", "Salário")
     cy.contains('.description', 'Salário').should('exist')
-    cy.get('#expenseDisplay').should('have.text', 'R$ 2.500,00')
+    validarValores('#incomeDisplay', 'R$ 2.500,00')
 
   })
 
   it('Cadastrar uma transação de saída', () => {
     criarTransação(-50, "2023-02-16", "Lanche iFood")
     cy.contains('.description', 'Lanche iFood').should('exist')
-    cy.get('#expenseDisplay').should('have.text', '- R$ 50,00')
+    validarValores('#expenseDisplay', '-R$ 50,00')
 
   });
 
@@ -57,4 +57,12 @@ function excluirTransação(descricao) {
     .parent()
     .find('img')
     .click()
+}
+
+
+function validarValores(campo, valor) {
+  cy.get(campo).invoke('text')
+    .invoke('replace', /\u00a0/g, ' ')
+    .should('eq', valor)
+
 }
